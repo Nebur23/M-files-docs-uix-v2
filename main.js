@@ -39,6 +39,7 @@ function handleNewShellFrame( shellFrame ) {
     // The following line would throw an exception ("The object cannot be accessed, because it is not ready."):
     // shellFrame.ShowMessage("A shell frame was created");
 
+
     // Register to be notified when the shell frame is started.
     shellFrame.Events.Register(
         MFiles.Event.Started,

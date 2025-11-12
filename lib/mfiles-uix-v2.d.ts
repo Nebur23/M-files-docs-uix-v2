@@ -115,20 +115,6 @@ declare namespace MFiles {
   }
 
   /**
-   * Menu locations where custom commands can be added
-   */
-  enum MenuLocation {
-    /** Top pane menu (main menu bar) */
-    MenuLocation_TopPaneMenu = "TopPaneMenu",
-    /** Context menu for objects */
-    MenuLocation_ContextMenu_ObjectList = "ContextMenu_ObjectList",
-    /** Context menu for folders */
-    MenuLocation_ContextMenu_FolderList = "ContextMenu_FolderList",
-    /** Task pane menu */
-    MenuLocation_TaskPane = "TaskPane"
-  }
-
-  /**
    * Dashboard configuration options
    */
   enum DashboardPanel {
@@ -140,8 +126,166 @@ declare namespace MFiles {
     BottomPanel = "bottom"
   }
 
- 
+  /**
+   * Detailed menu location where to add the existing custom *command.
+  *Possible locations are enumerated.
 
+ * NOTE: Stability is experimental. Non-backward compatible changes or removal
+ * may occur in any future release. Use of this feature is not recommended
+ * for production environments.
+ */
+ enum MenuLocation {
+    /**
+     * TopPane Menu, typically used for the UI Extension applications.
+     */
+    MenuLocation_TopPaneMenu = 47,
+
+    /**
+     * Menu location for the Activity view Context menu group 1.
+     */
+    MenuLocation_ActivityContextMenu_1 = 48,
+
+    /**
+     * Menu location for the Activity view Context menu group 2.
+     */
+    MenuLocation_ActivityContextMenu_2 = 49,
+
+    /**
+     * Menu location for the Activity view Context menu group 3.
+     */
+    MenuLocation_ActivityContextMenu_3 = 50,
+
+    /**
+     * Menu location for the context menu position for the open commands.
+     */
+    MenuLocation_ContextMenu_Open = 51,
+
+    /**
+     * Menu location for the context menu position for the checkout commands.
+     */
+    MenuLocation_ContextMenu_Checkout = 52,
+
+    /**
+     * Menu location for the context menu position for the share commands.
+     */
+    MenuLocation_ContextMenu_Share = 53,
+
+    /**
+     * Menu location for the position of object operations in the context menu.
+     */
+    MenuLocation_ContextMenu_ObjectOperations = 26,
+
+    /**
+     * Menu location for the context menu position for document conversions.
+     */
+    MenuLocation_ContextMenu_DocumentConversions = 41,
+
+    /**
+     * Menu location for the context menu position for the workflow action commands.
+     */
+    MenuLocation_ContextMenu_WorkflowActions = 54,
+
+    /**
+     * Menu location for the context menu position for the organize commands.
+     */
+    MenuLocation_ContextMenu_Organize = 55,
+
+    /**
+     * Menu location for the context menu position for the version control commands.
+     */
+    MenuLocation_ContextMenu_VersionControl = 56,
+
+    /**
+     * Menu location for the context menu position for the create commands.
+     */
+    MenuLocation_ContextMenu_Create = 57,
+
+    /**
+     * Menu location for the context menu position for the view options commands.
+     */
+    MenuLocation_ContextMenu_ViewOptions = 58,
+
+    /**
+     * Menu location for the context menu position for the grouping commands.
+     */
+    MenuLocation_ContextMenu_Group = 59,
+
+    /**
+     * Menu location for the context menu position for the display options commands.
+     */
+    MenuLocation_ContextMenu_DisplayOptions = 60,
+
+    /**
+     * Menu location for the context menu position for Edit commands.
+     */
+    MenuLocation_ContextMenu_Edit = 37,
+
+    /**
+     * Menu location for the bottom of the context menu.
+     */
+    MenuLocation_ContextMenu_Bottom = 43,
+
+    /**
+     * Menu location for the context menu position for more commands.
+     */
+    MenuLocation_ContextMenu_More = 99,
+
+    /**
+     * Menu location for the first command group in the task bar.
+     *
+     * NOTE: Stability is experimental. Non-backward compatible changes or removal may occur
+     * in any future release. Use of this feature is not recommended for production environments.
+     */
+    MenuLocation_TaskBar_First = 200,
+
+    /**
+     * Menu location for the "Main Actions" command group in the task bar.
+     *
+     * NOTE: Stability is experimental. Non-backward compatible changes or removal may occur
+     * in any future release. Use of this feature is not recommended for production environments.
+     */
+    MenuLocation_TaskBar_MainActions = 210,
+
+    /**
+     * Menu location for the "Assignments" command group in the task bar.
+     *
+     * NOTE: Stability is experimental. Non-backward compatible changes or removal may occur
+     * in any future release. Use of this feature is not recommended for production environments.
+     */
+    MenuLocation_TaskBar_Assignments = 220,
+
+    /**
+     * Menu location for the "Document Collections" command group in the task bar.
+     *
+     * NOTE: Stability is experimental. Non-backward compatible changes or removal may occur
+     * in any future release. Use of this feature is not recommended for production environments.
+     */
+    MenuLocation_TaskBar_DocumentCollections = 230,
+
+    /**
+     * Menu location for the "Check In" command group in the task bar.
+     *
+     * NOTE: Stability is experimental. Non-backward compatible changes or removal may occur
+     * in any future release. Use of this feature is not recommended for production environments.
+     */
+    MenuLocation_TaskBar_CheckIn = 240,
+
+    /**
+     * Menu location for the "Workflow States" command group in the task bar.
+     *
+     * NOTE: Stability is experimental. Non-backward compatible changes or removal may occur
+     * in any future release. Use of this feature is not recommended for production environments.
+     */
+    MenuLocation_TaskBar_WorkflowStates = 250,
+
+    /**
+     * Menu location for the last command group in the task bar.
+     *
+     * NOTE: Stability is experimental. Non-backward compatible changes or removal may occur
+     * in any future release. Use of this feature is not recommended for production environments.
+     */
+    MenuLocation_TaskBar_Last = 399,
+}
   // ============================================================================
   // CORE INTERFACES
   // ============================================================================
@@ -202,47 +346,199 @@ declare namespace MFiles {
   }
 
   /**
+   * Ths ICommandEvents interface provides methods to register and unregister event handlers for custom commands:
+   */
+  interface ICommandsEvents {
+    /**
+     * Registers an event handler for the specified event and returns the event handler ID.
+     * @param event - The event type to register for
+     * @param handler - The function to call when the event fires
+     */
+    Register(event: "CustomCommand" | "BuiltinCommand", handler: Function): number;
+
+    /**
+     * Unregisters the event handler with the specified ID.
+     * @param eventHandlerId - The ID returned from Register()
+     */
+    Unregister(eventHandlerId: number): void;
+  }
+
+  /**
    * Command management system
+   * The Commands API includes functionality for creating Custom Commands and menus.
    */
   interface Commands {
+
+      /**
+     * Properties
+     */
+    
+    Events : ICommandsEvents
+
     /**
-     * Creates a custom command
-     * @param name - The display name of the command
-     * @returns The command ID
+     * Methods
+     */
+
+      /**
+     * Adds existing custom command to the specified context menu location.
+     * 
+     * The AddCustomCommandToMenu function is a part of the M-Files UI Extension framework and is used to include 
+     * a custom command in a specific location within the M-Files user interface menu. It allows developers to 
+     * define the position and priority of the custom command in the menu structure. This function typically takes 
+     * parameters such as the ID of the custom command, the menu location where the command should appear, and a 
+     * priority value to determine its order within the menu. This enables customization of the user interface by 
+     * seamlessly integrating custom functionality into the M-Files application's menu system.
+     * 
+     * **Note:** The Command to be added must be first created using CreateCustomCommand method.
+     * 
+     * 
+     *@param customCommand - The command identifier. Use CreateCustomCommand method to create a command.
+     *@param location - Detailed menu location where to add the existing custom command.
+    Possible locations are enumerated.
+    *@param orderPriority - The order indication for the command. Smallest priority goes top.
+     * @returns Returns the Menu item ID.
+     * 
+     * @example
+     * ```typescript
+     * const menuItemId = await shellFrame.Commands.AddCustomCommandToMenu(    
+     *     customCommandId, // ID of the custom command, created using CreateCustomCommand
+     *     MFiles.MenuLocation.MenuLocation_TopPaneMenu, // MenuLocation using MFiles.MenuLocation enumeration
+     *     1 // Order priority of the menuitem
+     * );
+     * ```
+     */
+    AddCustomCommandToMenu(customCommand:number, location: MenuLocation, orderPriority:number ) : Promise < number >
+
+    /**
+     * Creates a custom command that can be added to the application toolbar or to the contextmenu.
+     * 
+     * The CreateCustomCommand function is a functionality within the M-Files UI Extension framework designed for creating custom commands dynamically. This function enables developers to define and generate new custom commands programmatically. It accepts the name of the command as a parameter, and it returns a unique identifier (ID) associated with the newly created command. 
+     * 
+     * 
+     * The created command ID can then be consumed for example by
+
+      1. **AddCustomCommandToMenu** to create a new Menu item which executes the command
+      2. **ExecuteCommand** to directly execute the command inside the application with optional command arguments
+      3. **CreateSubMenuItem** to create submenu commands.
+
+      You can control the visibility of the command in M-Files menus using **SetCommandState**.
+     * 
+     * @param name - The custom command's name.
+     * @returns Returns the command id of the created custom command.
+     * 
+     /**
+     * @example
+     * ```typescript
+     * // Create a new custom command using IShellFrame instance.
+     * const commandId = await shellFrame.Commands.CreateCustomCommand(name);
+     * ```
      */
     CreateCustomCommand(name: string): Promise<number>;
 
     /**
-     * Adds a custom command to a menu location
-     * @param commandId - The command ID
-     * @param location - The menu location
-     * @param priority - The display priority (lower numbers appear first)
+     * Creates a new SubMenu for already created Menu.
+     * 
+     *@param parentMenuItemId - ID of the Parent MenuItem.
+     *@param customCommand - Command to execute when the MenuItem is selected..
+      Possible locations are enumerated.
+    *@param orderPriority - Priority to assign to the new item.
+     * @returns ID of the newly created MenuItem.
+     * 
+     * @example
+     * ```typescript
+     * // shellFrame points here into the IShellFrame interface
+     const result = await shellFrame.Commands.CreateSubMenuItem(
+      parentMenuItemId,
+      customCommand,
+      orderPriority,
+      );
+     * ```
      */
-    AddCustomCommandToMenu(
-      commandId: number,
-      location: MenuLocation | string,
-      priority: number
-    ): Promise<void>;
+    CreateSubMenuItem(parentMenuItemId:number, customCommand:number, orderPriority:number) : Promise <number >
 
     /**
-     * Sets the icon for a command
-     * @param commandId - The command ID
-     * @param iconUrl - URL to the icon image
+     * Creates new custom task bar group for custom commands.
+
+      **NOTE**: Stability is experimental. Non-backward compatible changes or removal may occur in any
+      future release. Use of this feature is not recommended for production environments.
+
+      NOTE: If multiple task bar groups are created for the same MenuLocation with the same
+      orderPriority, their relative ordering is unspecified and may vary between runs, sessions or
+      versions. Do not rely on a particular order for groups with equal priority — assign distinct
+      orderPriority values to guarantee a deterministic ordering (lower values are shown first).
      */
-    SetIconFromUrl(commandId: number, iconUrl: string): Promise<void>;
+    CreateTaskbarGroup() : void
 
     /**
-     * Executes a built-in command
-     * @param commandId - The built-in command ID
+     * Deletes a custom command. The command is automatically removed.
      */
-    ExecuteCommand(commandId: number): Promise<void>;
+    DeleteCustomCommand() : void
 
     /**
-     * Sets whether a command is enabled
-     * @param commandId - The command ID
-     * @param enabled - Whether the command should be enabled
+     * Executes a user command.
      */
-    SetCommandState(commandId: number, enabled: boolean): Promise<void>;
+    ExecuteCommand() : void
+
+    /**
+     * Resolves the name that has been associated with the given command id.
+     */
+    GetCommandName() : void
+
+    /**
+     * Gets the command state for builtin or custom command in specified location.
+     */
+    GetCommandState() : void
+
+    /**
+     * Gets the MenuItem ID of a built-in command by its command ID and location.
+     */
+    GetMenuIdOfBuiltInCommand() : void
+
+    /**
+     * Removes a custom command from the specified menu location.
+     */
+    RemoveCustomCommandFromMenu() : void
+
+    /**
+     * Removes menuitem from the menu.
+     */
+    RemoveMenuItem() : void
+
+    /**
+     * Removes custom task bar group from the task bar.
+
+      **NOTE**: Stability is experimental. Non-backward compatible changes or removal may occur in any
+      future release. Use of this feature is not recommended for production environments.
+     */
+    RemoveTaskbarGroup() : void
+
+    /**
+     * Sets the command's state to be hidden, visible, enabled or disabled. Calling
+    this method may affect context menu, application toolbar, menus or all of them.
+     */
+    SetCommandState() : void
+
+    /**
+     * Sets the icon for a custom command.
+
+    **NOTE**: Stability is experimental. Non-backward compatible changes or removal may occur in any
+    future release. Use of this feature is not recommended for production environments.
+     */
+    SetIcon() : void
+
+    /**
+     * Sets the MenuItem state individually.
+     */
+    SetMenuItemState() : void
+
+    /**
+     * Sets the icon for a custom task bar group.
+
+    **NOTE**: Stability is experimental. Non-backward compatible changes or removal may occur in any
+    future release. Use of this feature is not recommended for production environments.
+     */
+    SetTaskbarGroupIcon() : void
+
   }
 
   /**
@@ -303,7 +599,7 @@ declare namespace MFiles {
     /** Event system for this shell frame */
     Events: Events;
 
-    /** Command management for this shell frame */
+    /** Command management for this shell frame*/
     Commands: Commands;
 
     /** Dashboard management */
@@ -524,6 +820,7 @@ interface IFolder {
    */
   data: string; // todo
 }
+
 
 
 
