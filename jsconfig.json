@@ -1,11 +1,21 @@
 {
   "compilerOptions": {
+    "target": "es2020",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "allowJs": true,
     "checkJs": true,
-    "target": "es6",
-    "module": "esnext"
+    "skipLibCheck": true,
+    "esModuleInterop": true
   },
   "include": [
     "./**/*.js",
-    "./lib/**/*.d.ts"
+    "./**/*.ts",
+    "./types/**/*.d.ts",
+    "./interfaces/**/*.d.ts",
+    "index.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }
