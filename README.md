@@ -265,8 +265,8 @@ This project provides type definitions for the M-Files UIX framework. Please ref
 
 ## 👤 Author
 
-**Nebur23**
-**Xelly**
+- **Nebur23**
+- **Xelly**
 
 ---
 
